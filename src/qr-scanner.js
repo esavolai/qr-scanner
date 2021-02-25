@@ -274,8 +274,8 @@ export default class QrScanner {
     }
 
     /* async */
-    static createQrEngine(workerPath = QrScanner.WORKER_PATH) {
-        return ('BarcodeDetector' in window ? BarcodeDetector.getSupportedFormats() : Promise.resolve([]))
+    static createQrEngine(workerPath = QrScanner.WORKER_PATH, forceWorker = QrScanner.FORCE_WORKER) {
+        return ('BarcodeDetector' in window && !forceWorker ? BarcodeDetector.getSupportedFormats() : Promise.resolve([]))
             .then((supportedFormats) => supportedFormats.indexOf('qr_code') !== -1
                 ? new BarcodeDetector({ formats: ['qr_code'] })
                 : new Worker(workerPath)
@@ -481,3 +481,4 @@ export default class QrScanner {
 QrScanner.DEFAULT_CANVAS_SIZE = 400;
 QrScanner.NO_QR_CODE_FOUND = 'No QR code found';
 QrScanner.WORKER_PATH = 'qr-scanner-worker.min.js';
+QrScanner.FORCE_WORKER = false;
